@@ -1,14 +1,18 @@
 import click
 
+from models import Task
+
 
 @click.group()
 def cli():
     """tasks is a CLI for managing your TODOs."""
 
 @cli.command()
-def add():
+@click.argument('content', nargs=-1, required=True)
+def add(content):
     """Add a new task to your TODO list"""
-    click.echo('adding a new task...')
+    t = Task(id=1, content=' '.join(content))
+    click.echo(f'Added "{t.content}" to your task list.')
 
 @cli.command()
 def list():
