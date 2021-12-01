@@ -12,8 +12,16 @@ def cli():
 @click.argument('content', nargs=-1, required=True)
 def add(content):
     """Add a new task to your TODO list"""
-    task = models.create_task(' '.join(content))
-    click.echo(f"""Added "{task['content']}" to your task list.""")
+    # create a new task
+    new_task = models.create_task(' '.join(content))
+
+    # save it to json file
+    tasks = storage.read_tasks_from_json()
+    tasks[new_task['id']] = new_task
+    storage.write_tasks_to_json(tasks)
+
+    # alert user
+    click.echo(f"""Added "{new_task['content']}" to your task list.""")
 
 @cli.command()
 def list():
