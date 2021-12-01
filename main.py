@@ -1,6 +1,7 @@
 import click
 
 import models
+import storage
 
 
 @click.group()
@@ -17,7 +18,11 @@ def add(content):
 @cli.command()
 def list():
     """List all of your incomplete tasks"""
-    click.echo('listing incomplete tasks...')
+    tasks = storage.read_tasks_from_json()
+
+    click.echo("You have the following tasks:")
+    for task_id, task in tasks.items():
+        click.echo(f"{task['id']}. {task['content']}")
 
 @cli.command()
 def do():
