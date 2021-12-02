@@ -33,10 +33,24 @@ def list():
         click.echo(f"{task['id']}. {task['content']}")
 
 @cli.command()
-def do():
+@click.argument('task_id')
+def do(task_id):
     """Mark a task on your TODO list as complete"""
-    click.echo("completing a task...")
+    # read task and handle if not found
+    tasks = storage.read_tasks_from_json()
+    try:
+        task = tasks[task_id]
+    except KeyError:
+        click.echo(f"There is no task with id {task_id}")
+        return
+
+    # update and save
+    task['is_done'] = True
+    storage.write_tasks_to_json(tasks)
+
+    # inform user
+    click.echo(f"""You have completed the "{task['content']}" task.""")
+
 
 if __name__ == '__main__':
     cli()
-

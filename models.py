@@ -22,7 +22,8 @@ def create_task(content):
     """a factory function used to create new tasks"""
     return {
         'id': get_serial_id(),
-        'content': content
+        'content': content,
+        'is_done': False
     }
 
 
