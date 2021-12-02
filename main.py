@@ -1,3 +1,6 @@
+import operator
+import itertools
+
 import click
 
 import models
@@ -26,10 +29,14 @@ def add(content):
 @cli.command()
 def list():
     """List all of your incomplete tasks"""
+    # read tasks and filter them by status
     tasks = storage.read_tasks_from_json()
+    # incomplete_tasks = [t for t in tasks.values() if not t['is_done']]
+    incomplete_tasks = itertools.filterfalse(operator.itemgetter('is_done'), tasks.values())
 
+    # display filtered tasks
     click.echo("You have the following tasks:")
-    for task_id, task in tasks.items():
+    for task in incomplete_tasks:
         click.echo(f"{task['id']}. {task['content']}")
 
 @cli.command()
