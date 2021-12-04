@@ -26,9 +26,9 @@ def add(content):
     # alert user
     click.echo(f"""Added "{new_task['content']}" to your task list.""")
 
-@click.option('--incomplete', 'status', flag_value='incomplete', default=True)
-@click.option('--complete', 'status', flag_value='complete')
-@click.option('--all', 'status', flag_value='all')
+@click.option('-i', '--incomplete', 'status', flag_value='incomplete', default=True)
+@click.option('-c', '--complete', 'status', flag_value='complete')
+@click.option('-a', '--all', 'status', flag_value='all')
 @cli.command()
 def show(status):
     """Filter tasks by status. By default only shows `incomplete` tasks"""
