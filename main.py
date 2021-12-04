@@ -30,7 +30,7 @@ def add(content):
 @click.option('--complete', 'status', flag_value='complete')
 @click.option('--all', 'status', flag_value='all')
 @cli.command()
-def list(status):
+def show(status):
     """Filter tasks by status. By default only shows `incomplete` tasks"""
     # read tasks
     tasks = storage.read_tasks_from_json()
@@ -39,16 +39,13 @@ def list(status):
     # filter tasks by status
     # and generate msg based on #filtered_tasks
     if status == 'incomplete':
-        # TODO/BUG: using list() constructor to create a new list
-        # would cause a recursion error as it interfer with the command/function name
-        # TODO: so maybe update command name? (eg. show)
         # filtered_tasks = [t for t in tasks.values() if not t['is_done']]
-        filtered_tasks = [t for t in itertools.filterfalse(operator.itemgetter('is_done'), tasks.values())]
+        filtered_tasks = list(itertools.filterfalse(operator.itemgetter('is_done'), tasks.values()))
         msg = "You have the following incomplete tasks:"
         if not filtered_tasks:
             msg = "You don't have any tasks to do."
     elif status == 'complete':
-        filtered_tasks = [t for t in filter(operator.itemgetter('is_done'), tasks.values())]
+        filtered_tasks = list(filter(operator.itemgetter('is_done'), tasks.values()))
         msg = "You have completed the following tasks:"
         if not filtered_tasks:
             msg = "You haven't completed any tasks yet."
@@ -56,7 +53,7 @@ def list(status):
         # we must cast tasks to dict_list here so it:
         # - matches the result of other filtering cases
         # - not break later while iterating over them (when informing user)
-        filtered_tasks = [t for t in tasks.values()]
+        filtered_tasks = list(tasks.values())
         msg = "You have the following tasks:"
         if not filtered_tasks:
             msg = "You didn't add any tasks yet."
