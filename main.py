@@ -18,12 +18,7 @@ def add(content):
     # create a new task
     new_task = models.create_task(' '.join(content))
 
-    # save it to json file
-    tasks = storage.read_tasks_from_json()
-    tasks[new_task['id']] = new_task
-    storage.write_tasks_to_json(tasks)
-
-    # alert user
+    # inform user
     click.echo(f"""Added "{new_task['content']}" to your task list.""")
 
 @click.option('-i', '--incomplete', 'status', flag_value='incomplete', default=True)
