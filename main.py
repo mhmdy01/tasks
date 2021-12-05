@@ -5,6 +5,7 @@ import click
 
 import models
 import storage
+import display
 
 
 @click.group()
@@ -31,27 +32,18 @@ def show(status):
     tasks = storage.read_tasks_from_json()
 
     # @disply to user, we need to know 2 things: which tasks, which msg?
-    # filter tasks by status
-    # and generate msg based on #filtered_tasks
+    # generate a msg and filter tasks based on status
+    msg = f'{status} tasks'.title()
     if status == 'incomplete':
         # filtered_tasks = [t for t in tasks.values() if not t['is_done']]
         filtered_tasks = list(itertools.filterfalse(operator.itemgetter('is_done'), tasks.values()))
-        msg = "You have the following incomplete tasks:"
-        if not filtered_tasks:
-            msg = "You don't have any tasks to do."
     elif status == 'complete':
         filtered_tasks = list(filter(operator.itemgetter('is_done'), tasks.values()))
-        msg = "You have completed the following tasks:"
-        if not filtered_tasks:
-            msg = "You haven't completed any tasks yet."
     elif status == 'all':
         # we must cast tasks to dict_list here so it:
         # - matches the result of other filtering cases
         # - not break later while iterating over them (when informing user)
         filtered_tasks = list(tasks.values())
-        msg = "You have the following tasks:"
-        if not filtered_tasks:
-            msg = "You didn't add any tasks yet."
     else:
         # is this block necessary?
         # cuz by default click should catch invalid arguments
@@ -59,9 +51,7 @@ def show(status):
         return
 
     # display filtered tasks
-    click.echo(msg)
-    for task in filtered_tasks:
-        click.echo(f"{task['id']}. {task['content']}")
+    display.display_tasks(msg, filtered_tasks)
 
 @cli.command()
 @click.argument('task_id')
