@@ -72,6 +72,25 @@ def do(task_id):
     # inform user
     click.echo(f"""You have completed the "{task['content']}" task.""")
 
+@cli.command()
+@click.argument('task_id')
+def rm(task_id):
+    """Delete a task from your TODO list"""
+    # read task and handle if not found
+    tasks = storage.read_tasks_from_json()
+    try:
+        task = tasks[task_id]
+    except KeyError:
+        click.echo(f"There is no task with id {task_id}")
+        return
+
+    # delete the task and save
+    del tasks[task_id]
+    storage.write_tasks_to_json(tasks)
+
+    # inform user
+    click.echo(f"""You have deleted the "{task['content']}" task.""")
+
 
 if __name__ == '__main__':
     cli()
