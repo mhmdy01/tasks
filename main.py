@@ -16,11 +16,18 @@ def cli():
 @click.argument('content', nargs=-1, required=True)
 def add(content):
     """Add a new task to your TODO list"""
+    # read stored tasks
+    tasks = storage.read_tasks_from_json()
+
     # create a new task
-    new_task = models.create_task(' '.join(content))
+    task = models.create_task(' '.join(content), tasks)
+
+    # add it to existing tasks and save all to json
+    tasks[task['id']] = task
+    storage.write_tasks_to_json(tasks)
 
     # inform user
-    click.echo(f"""Added "{new_task['content']}" to your task list.""")
+    click.echo(f"""Added "{task['content']}" to your task list.""")
 
 @click.option('-i', '--incomplete', 'status', flag_value='incomplete', default=True)
 @click.option('-c', '--complete', 'status', flag_value='complete')
