@@ -1,5 +1,4 @@
 import utils
-import storage
 
 
 def create_task(content, tasks):
@@ -12,6 +11,4 @@ def create_task(content, tasks):
 
 
 if __name__ == '__main__':
-    tasks_to_add = ['watch a movie', 'call mom', 'finish homework']
-    tasks = [create_task(content) for content in tasks_to_add]
-    print(tasks)
+    pass
