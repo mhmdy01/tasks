@@ -69,5 +69,32 @@ class ReadTasksFromJsonTests(unittest.TestCase):
         self.file_that_exists.unlink()
 
 
+class WriteTasksToJsonTests(unittest.TestCase):
+    """tests for storage.write_tasks_to_json"""
+    def setUp(self):
+        """init some data"""
+        # init paths
+        self.json_file_path = Path.cwd() / 'delete_me.json'
+
+        # init tasks
+        self.tasks = {
+            '1': {
+                'id': 1,
+                'content': 'task #1',
+                'is_done': False
+            }
+        }
+
+    def test_write_tasks_creates_file(self):
+        """should create json file if it doesn't exist yet"""
+        self.assertFalse(self.json_file_path.exists())
+        storage.write_tasks_to_json(self.tasks, self.json_file_path)
+        self.assertTrue(self.json_file_path.exists())
+
+    def tearDown(self):
+        """delete test file"""
+        self.json_file_path.unlink()
+
+
 if __name__ == '__main__':
     unittest.main()
